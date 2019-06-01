@@ -36,7 +36,7 @@ class AndroTest(auto.DirectoryAndroAnalysis):
         # finish is called regardless of a crash, so maybe store the
         # information somewhere
         if self.has_crashed:
-            print("Analysis of {} has finished with Errors".format(os.path.basename(log)))
+            print("Analysis of {} has finished with Errors".format(os.path.basename(log.filename)))
         else:
             print("Analysis of {} has finished!".format(os.path.basename(log.filename)))
 
