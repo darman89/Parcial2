@@ -1,6 +1,6 @@
 import json
 
-from DatabaseConnector import insert_ApkProperties
+from DatabaseConnector import insert_ApkProperties, create_ApkTable
 from androguard.core.analysis import auto
 import sys
 
@@ -13,6 +13,8 @@ class AndroTest(auto.DirectoryAndroAnalysis):
         self.has_crashed = False
 
     def analysis_app(self, log, apkobj, dexobj, analysisobj):
+        # Crear Table de la base de datos
+        create_ApkTable()
 
         # Capturar la información de la APK
         app_name = apkobj.get_app_name()
