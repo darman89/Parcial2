@@ -131,6 +131,15 @@ def create_ApkTable():
             "result" bool,
             "diff" json NOT NULL
         );
+        """,
+                """
+        DROP TABLE IF EXISTS "public"."testwrongstringresource";
+        CREATE TABLE testwrongstringresource(
+            "id" SERIAL,
+            "mutant_apk" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+            "result" bool,
+            "diff" json NOT NULL
+        );
         """,)
     conn = None
     try:
@@ -250,6 +259,24 @@ def select_Apk_TargetSdkVersion():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         cur.execute("SELECT target_sdk_version FROM apk LIMIT 1")
+        row: str = cur.fetchone()[0]
+        cur.close()
+        return row
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def select_Apk_StringsApp():
+    """ query data from the vendors table """
+    conn = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute("SELECT strings_app FROM apk LIMIT 1")
         row: str = cur.fetchone()[0]
         cur.close()
         return row
@@ -397,6 +424,32 @@ def insert_MissingPermissionManifestTest(mutant_apk, result, diff):
 def insert_SdkVersionTest(mutant_apk, result, diff):
     conn = None
     sql = """INSERT INTO testsdkversion(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        # execute a statement
+        cur.execute(sql, (mutant_apk, result, diff,))
+
+        # commit the changes to the database
+        conn.commit()
+        # close communication with the database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+def insert_InvalidWrongStringResourceTest(mutant_apk, result, diff):
+    conn = None
+    sql = """INSERT INTO testwrongstringresource(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
     try:
         # read connection parameters
         params = config()
