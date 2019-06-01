@@ -79,8 +79,17 @@ def create_ApkTable():
         ADD PRIMARY KEY ("app_name");
         """,
                 """
-        DROP TABLE IF EXISTS "public"."activitynotdefinedtest";
-        CREATE TABLE activitynotdefinedtest(
+        DROP TABLE IF EXISTS "public"."testactivitynotdefined";
+        CREATE TABLE testactivitynotdefined(
+            "id" SERIAL,
+            "mutant_apk" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+            "result" bool,
+            "diff" json NOT NULL
+        );
+        """,
+                """
+        DROP TABLE IF EXISTS "public"."testinvalidactivityname";
+        CREATE TABLE testinvalidactivityname(
             "id" SERIAL,
             "mutant_apk" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
             "result" bool,
@@ -128,7 +137,33 @@ def select_Apk_ActivitiesNames():
 
 def insert_ActivityNotDefinedTest(mutant_apk, result, diff):
     conn = None
-    sql = """INSERT INTO activitynotdefinedtest(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
+    sql = """INSERT INTO testactivitynotdefined(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        # execute a statement
+        cur.execute(sql, (mutant_apk, result, diff,))
+
+        # commit the changes to the database
+        conn.commit()
+        # close communication with the database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+def insert_InvalidActivityNameTest(mutant_apk, result, diff):
+    conn = None
+    sql = """INSERT INTO testinvalidactivityname(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
     try:
         # read connection parameters
         params = config()
