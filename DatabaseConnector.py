@@ -58,7 +58,7 @@ def insert_ApkProperties(app_name, main_activity, min_sdk_version, target_sdk_ve
             print('Database connection closed.')
 
 
-def createApkTable():
+def create_ApkTable():
     """ create apk table in the PostgreSQL database """
     commands = ("""
         DROP TABLE IF EXISTS "public"."apk";
@@ -100,4 +100,4 @@ def createApkTable():
 
 
 if __name__ == '__main__':
-    createApkTable()
+    create_ApkTable()
