@@ -4,7 +4,7 @@ from DatabaseConnector import insert_ApkProperties
 from androguard.core.analysis import auto
 import sys
 
-PATH_APKS = "G:\DANTE\/baseline"
+PATH_BASELINE_APK = "G:\DANTE\/baseline"
 
 
 class AndroTest(auto.DirectoryAndroAnalysis):
@@ -49,7 +49,7 @@ class AndroTest(auto.DirectoryAndroAnalysis):
 
 settings = {
     # The directory `some/directory` should contain some APK files
-    "my": AndroTest(PATH_APKS),
+    "my": AndroTest(PATH_BASELINE_APK),
     # Use the default Logger
     "log": auto.DefaultAndroLog,
     # Use maximum of 2 threads
