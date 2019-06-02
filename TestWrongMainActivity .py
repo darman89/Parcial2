@@ -46,12 +46,12 @@ class AndroTest(auto.DirectoryAndroAnalysis):
 
 
 settings = {
-    # The directory `some/directory` should contain some APK files
+    # The directory `PATH_MUTANTS_DIR` should contain some APK files
     "my": AndroTest(PATH_MUTANTS_DIR),
     # Use the default Logger
     "log": auto.DefaultAndroLog,
     # Use maximum of 20 threads
-    "max_fetcher": 20,
+    "max_fetcher": 5,
 }
 
 aa = auto.AndroAuto(settings)
