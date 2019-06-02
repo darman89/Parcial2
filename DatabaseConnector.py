@@ -3,7 +3,6 @@ from configparser import ConfigParser
 
 DATABASE_INI = 'database.ini'
 
-
 def config(filename=DATABASE_INI, section='postgresql'):
     # create a parser
     parser = ConfigParser()
@@ -139,6 +138,15 @@ def create_ApkTable():
             "mutant_apk" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
             "result" bool,
             "diff" json NOT NULL
+        );
+        """,
+                """
+        DROP TABLE IF EXISTS "public"."compareapkmutants";
+        CREATE TABLE compareapkmutants(
+            "id" SERIAL,
+            "mutant_apk" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+            "result" bool,
+            "diff" TEXT NOT NULL
         );
         """,)
     conn = None
@@ -450,6 +458,33 @@ def insert_SdkVersionTest(mutant_apk, result, diff):
 def insert_InvalidWrongStringResourceTest(mutant_apk, result, diff):
     conn = None
     sql = """INSERT INTO testwrongstringresource(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        # execute a statement
+        cur.execute(sql, (mutant_apk, result, diff,))
+
+        # commit the changes to the database
+        conn.commit()
+        # close communication with the database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def insert_CompareApkMutantMethods(mutant_apk, result, diff):
+    conn = None
+    sql = """INSERT INTO compareapkmutants(mutant_apk, result, diff) VALUES(%s, %s, %s);"""
     try:
         # read connection parameters
         params = config()

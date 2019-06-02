@@ -1,13 +1,11 @@
 import json
 import os
 
-from DatabaseConnector import select_Apk_ActivitiesNames, insert_ApkProperties, insert_ActivityNotDefinedTest, \
-    insert_InvalidActivityNameTest, select_Apk_ActivitiesLabels, insert_InvalidLabelTest, select_Apk_MainActivity, \
-    insert_WrongMainActivityTest, select_Apk_MinSdkVersion, select_Apk_TargetSdkVersion, insert_SdkVersionTest
+from DatabaseConnector import select_Apk_MinSdkVersion, select_Apk_TargetSdkVersion, insert_SdkVersionTest
 from androguard.core.analysis import auto
 import sys
 
-PATH_BASELINE_APK = "G:\DANTE\/mutantes"
+PATH_MUTANTS_DIR = "G:\DANTE\/mutantes"
 
 
 class AndroTest(auto.DirectoryAndroAnalysis):
@@ -55,7 +53,7 @@ class AndroTest(auto.DirectoryAndroAnalysis):
 
 settings = {
     # The directory `some/directory` should contain some APK files
-    "my": AndroTest(PATH_BASELINE_APK),
+    "my": AndroTest(PATH_MUTANTS_DIR),
     # Use the default Logger
     "log": auto.DefaultAndroLog,
     # Use maximum of 20 threads
